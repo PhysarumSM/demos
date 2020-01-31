@@ -8,9 +8,9 @@ import (
 )
 
 func main() {
-	pollInterval := 10
+	pollInterval := 2
 	timerCh := time.Tick(time.Duration(pollInterval) * time.Second)
-	// do every 10 seconds
+	// do every 2 seconds
 	for range timerCh {
 		// make request
         resp, err := http.Get("http://127.0.0.1:4201/hello-world-server")
