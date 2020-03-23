@@ -1,7 +1,8 @@
 sudo docker image build -t hello-world-server:1.0 .
 sudo docker image build -t hivanco/hello-world-server:1.0 .
 
-sudo docker container run --publish 4001:4001 --detach -e "PROXY_SERVICE_IP=10.11.17.6" --name hws hello-world-server:1.0
+sudo docker container run --publish 4001:4001 --detach -e "PROXY_SERVICE_IP=10.11.17.6" --name hws hivanco/hello-world-server:1.0
+sudo docker container run --network="host" --detach -e "PROXY_IP=10.11.17.6" --name hws hivanco/hello-world-server:1.0
 
 sudo docker exec -it hws /bin/bash
 
