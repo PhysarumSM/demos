@@ -15,7 +15,7 @@ func main() {
     }
 
     port := os.Args[1]
-	pollInterval := 2
+	pollInterval := 4
 	timerCh := time.Tick(time.Duration(pollInterval) * time.Second)
 	// do every 2 seconds
 	for range timerCh {
