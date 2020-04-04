@@ -54,13 +54,13 @@ func main() {
     for range timerCh {
         // Generate random command
         cmd := commands[rand.Intn(len(commands))]
-        num1 := strconv.Itoa(rand.Intn(10))
-        num2 := strconv.Itoa(rand.Intn(10))
+        num1 := strconv.Itoa(rand.Intn(10)+1)
+        num2 := strconv.Itoa(rand.Intn(10)+1)
         fmt.Println("Command:", cmd, num1, num2)
 
         // Make request
         resp, err := http.Get("http://127.0.0.1:" + proxyPort +
-            "/calc-server/" + constructParams(cmd, num1, num2))
+            "/calc-server:1.0/" + constructParams(cmd, num1, num2))
         if err != nil {
             fmt.Println(err.Error())
             continue
