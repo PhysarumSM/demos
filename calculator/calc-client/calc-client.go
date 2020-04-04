@@ -33,7 +33,7 @@ func main() {
            panic(err)
         }
         defer resp.Body.Close()
-    
+
         body, err := ioutil.ReadAll(resp.Body)
         if err != nil {
             panic(err)
@@ -48,8 +48,8 @@ func main() {
     rand.Seed(time.Now().UnixNano())
     commands := []string{"add", "sub", "mul", "div"}
 
-    // Do every 2 seconds
-    pollInterval := 2
+    // Do every 8 seconds
+    pollInterval := 8
     timerCh := time.Tick(time.Duration(pollInterval) * time.Second)
     for range timerCh {
         // Generate random command
@@ -73,6 +73,6 @@ func main() {
         }
 
         fmt.Println("Response status:", resp.Status)
-        fmt.Println("Result:", string(body))        
+        fmt.Println("Result:", string(body))
     }
 }
