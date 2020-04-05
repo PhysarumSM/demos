@@ -1,5 +1,8 @@
 # ignore binaries
 calculator/calc-client/calc-client
 calculator/calc-server/calc-server
+
+covid19-tracking/covid19-db/covid19-db
+
 helloworld/helloworldserver/helloworldserver
 helloworld/helloworldclient/helloworldclient

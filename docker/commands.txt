@@ -3,6 +3,7 @@ sudo docker image build -t hivanco/hello-world-server:1.0 .
 
 sudo docker container run --publish 4001:4001 --detach -e "PROXY_SERVICE_IP=10.11.17.6" --name hws hivanco/hello-world-server:1.0
 sudo docker container run --network="host" --detach -e "PROXY_IP=10.11.17.6" --name hws hivanco/hello-world-server:1.0
+sudo docker container run --network="host" --detach -e "PROXY_IP=10.11.17.4" -e "PROXY_PORT=7777" -e "SERVICE_PORT=8888" --name testing hivanco/calc-server:1.0
 
 sudo docker exec -it hws /bin/bash
 
