@@ -16,6 +16,9 @@ const homepage string =
 <h1>COVID-19 Tracker</h1>
 
 <form action="/">
+    <h2>Location</h2>
+    <p>Leave blank to get worldwide data</p>
+
     <label for="country">Country/Region:</label><br>
     <input type="text" id="country" name="country" value=""><br>
 
@@ -26,7 +29,10 @@ const homepage string =
     <input type="text" id="city" name="city" value=""><br>
     <br>
 
-    <label for="month">Month:</label><br>
+    <h2>Date</h2>
+    <p>Leave blank to get latest date</p>
+
+    <label for="month">Month (1-12):</label><br>
     <input type="text" id="month" name="month" value=""><br>
 
     <label for="day">Day:</label><br>
@@ -37,9 +43,10 @@ const homepage string =
     <br>
 
     <input type="submit" value="Submit">
-</form> 
+</form>
+<br>
 
-<p>Results:</p>
+<h2>Results:</h2>
 
 <pre>
 %s
@@ -77,14 +84,19 @@ func rootHandler(proxyPort string) func(http.ResponseWriter, *http.Request) {
     }
 }
 
+func faviconHandler(w http.ResponseWriter, r *http.Request) {
+    http.ServeFile(w, r, "favicon.ico")
+}
+
 func main() {
     if len(os.Args) != 3 {
-        fmt.Println("Usage:", os.Args[0], "<listen-port> <proxy-port>")
+        fmt.Println("Usage:", os.Args[0], "<proxy-port> <listen-port>")
         os.Exit(1)
     }
-    listenPort := os.Args[1]
-    proxyPort := os.Args[2]
+    proxyPort := os.Args[1]
+    listenPort := os.Args[2]
 
     http.HandleFunc("/", rootHandler(proxyPort))
+    http.HandleFunc("/favicon.ico", faviconHandler)
     log.Fatal(http.ListenAndServe(":" + listenPort, nil))
 }

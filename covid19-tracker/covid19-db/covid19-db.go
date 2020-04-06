@@ -5,6 +5,7 @@ package main
 import (
     "encoding/csv"
     "encoding/json"
+    "errors"
     "fmt"
     "io"
     "io/ioutil"
@@ -62,6 +63,10 @@ func downloadReport(reportName string) error {
         return err
     }
 
+    if string(body[:4]) != "FIPS" {
+        return errors.New(string(body))
+    }
+
     ioutil.WriteFile(reportName, body, 0644)
 
     return nil
@@ -115,8 +120,15 @@ func queryHandler(listenIp, listenPort string) func(http.ResponseWriter, *http.R
         fmt.Println(city, province, country, month, day, year)
 
         var reportName string
-        if month == 0 || day == 0 || year == 0 {
+        if month == 0 && day == 0 && year == 0 {
             reportName = latestReportName()
+        } else if month < 1 || month > 12 || day < 1 || day > 31 ||
+            year > time.Now().UTC().Year() {
+            
+            msg := "Please enter a valid date"
+            fmt.Println(msg)
+            fmt.Fprint(w, msg)
+            return
         } else {
             reportName = datedReportName(month, day, year)
         }
@@ -126,7 +138,7 @@ func queryHandler(listenIp, listenPort string) func(http.ResponseWriter, *http.R
             err2 := downloadReport(reportName)
             if err2 != nil {
                 fmt.Println(err2)
-                fmt.Fprint(w, err)
+                fmt.Fprint(w, err2)
                 return
             }
         } else if err != nil {
@@ -144,6 +156,7 @@ func queryHandler(listenIp, listenPort string) func(http.ResponseWriter, *http.R
 
         var qr QueryResponse
         cr := csv.NewReader(reportFile)
+        recordExists := false
         for {
             record, err := cr.Read()
             if err == io.EOF {
@@ -158,22 +171,21 @@ func queryHandler(listenIp, listenPort string) func(http.ResponseWriter, *http.R
             if (strings.EqualFold(record[cityCol], city) || city == "") &&
                 (strings.EqualFold(record[provinceCol], province) || province == "") &&
                 (strings.EqualFold(record[countryCol], country) || country == "") {
+                
+                recordExists = true
 
                 confirmed, err := strconv.Atoi(record[confirmedCol])
                 if err != nil {
                     confirmed = 0
                 }
-
                 deaths, err := strconv.Atoi(record[deathsCol])
                 if err != nil {
                     deaths = 0
                 }
-
                 recovered, err := strconv.Atoi(record[recoveredCol])
                 if err != nil {
                     recovered = 0
                 }
-
                 active, err := strconv.Atoi(record[activeCol])
                 if err != nil {
                     active = 0
@@ -185,8 +197,14 @@ func queryHandler(listenIp, listenPort string) func(http.ResponseWriter, *http.R
                 qr.Active += active
             }
         }
-
         reportFile.Close()
+
+        if !recordExists {
+            msg := "Location not found in database"
+            fmt.Println(msg)
+            fmt.Fprint(w, msg)
+            return
+        }
 
         if city == "" && province == "" && country == "" {
             qr.Location = "World"
