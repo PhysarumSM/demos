@@ -2,7 +2,9 @@
 calculator/calc-client/calc-client
 calculator/calc-server/calc-server
 
-covid19-tracking/covid19-db/covid19-db
+covid19-tracker/covid19-cli/covid19-cli
+covid19-tracker/covid19-db/covid19-db
+covid19-tracker/covid19-db/*.csv
 
 helloworld/helloworldserver/helloworldserver
 helloworld/helloworldclient/helloworldclient
