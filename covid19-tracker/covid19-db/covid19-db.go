@@ -17,10 +17,13 @@ import (
 )
 
 type QueryResponse struct {
+    Location string
+    Date string
     Confirmed int
     Deaths int
     Recovered int
     Active int
+    ServedBy string
 }
 
 const (
@@ -185,7 +188,14 @@ func queryHandler(listenIp, listenPort string) func(http.ResponseWriter, *http.R
 
         reportFile.Close()
 
-        data, err := json.Marshal(qr)
+        if city == "" && province == "" && country == "" {
+            qr.Location = "World"
+        } else {
+            qr.Location = fmt.Sprintf("%s, %s, %s", city, province, country)
+        }
+        qr.Date = reportName[:len(reportName)-4]
+        qr.ServedBy = listenIp + ":" + listenPort
+        data, err := json.MarshalIndent(qr, "", "    ")
         if err != nil {
             fmt.Println(err)
             fmt.Fprint(w, err)
@@ -194,8 +204,6 @@ func queryHandler(listenIp, listenPort string) func(http.ResponseWriter, *http.R
 
         dataStr := string(data)
         fmt.Println(dataStr)
-
-        fmt.Fprintln(w, "Served by:", listenIp + ":" + listenPort)
         fmt.Fprintln(w, dataStr)
     }
 }

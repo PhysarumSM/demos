@@ -5,6 +5,7 @@ calculator/calc-server/calc-server
 covid19-tracker/covid19-cli/covid19-cli
 covid19-tracker/covid19-db/covid19-db
 covid19-tracker/covid19-db/*.csv
+covid19-tracker/covid19-webserver/covid19-webserver
 
 helloworld/helloworldserver/helloworldserver
 helloworld/helloworldclient/helloworldclient
