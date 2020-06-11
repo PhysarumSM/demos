@@ -64,7 +64,7 @@ func rootHandler(proxyPort string) func(http.ResponseWriter, *http.Request) {
 
         // Query database
         proxyUrlStr := "http://127.0.0.1:" + proxyPort +
-            "/covid19-db:1.0/query?" + q.Encode()
+            "/covid19-db:1.1/query?" + q.Encode()
         fmt.Println("Request to proxy:", proxyUrlStr)
         resp, err := http.Get(proxyUrlStr)
         if err != nil {

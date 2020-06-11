@@ -24,7 +24,7 @@ type QueryResponse struct {
     Deaths int
     Recovered int
     Active int
-    ServedBy string
+    DatabaseServer string
 }
 
 const (
@@ -212,7 +212,7 @@ func queryHandler(listenIp, listenPort string) func(http.ResponseWriter, *http.R
             qr.Location = fmt.Sprintf("%s, %s, %s", city, province, country)
         }
         qr.Date = reportName[:len(reportName)-4]
-        qr.ServedBy = listenIp + ":" + listenPort
+        qr.DatabaseServer = listenIp + ":" + listenPort
         data, err := json.MarshalIndent(qr, "", "    ")
         if err != nil {
             fmt.Println(err)
