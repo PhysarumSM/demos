@@ -47,7 +47,7 @@ func main() {
     commands := []string{"add", "sub", "mul", "div"}
 
     // Do every 8 seconds
-    pollInterval := 8
+    pollInterval := 5
     timerCh := time.Tick(time.Duration(pollInterval) * time.Second)
     for range timerCh {
         // Generate random command

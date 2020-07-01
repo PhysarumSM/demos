@@ -44,7 +44,7 @@ func main() {
 
     proxyPort := flag.Arg(0)
 
-    proxyUrl, err := url.Parse("http://127.0.0.1:" + proxyPort + "/covid19-db:1.0/query")
+    proxyUrl, err := url.Parse("http://127.0.0.1:" + proxyPort + "/covid19-db:1.1/query")
     if err != nil {
         panic(err)
     }
