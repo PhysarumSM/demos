@@ -1,0 +1,19 @@
+{
+    "NetworkSoftReq": {
+        "RTT": 500
+    },
+    "NetworkHardReq": {
+        "RTT": 1000
+    },
+    "CpuReq": 0,
+    "MemoryReq": 0,
+
+    "DockerConf": {
+        "From": "ubuntu:16.04",
+        "Copy": [
+            ["helloworldserver", "."]
+        ],
+        "Run": [],
+        "Cmd": "./helloworldserver $SERVICE_PORT"
+    }
+}

@@ -20,7 +20,7 @@ func main() {
 	// do every 2 seconds
 	for range timerCh {
 		// make request
-        resp, err := http.Get("http://127.0.0.1:" + port + "/hello-world-server")
+        resp, err := http.Get("http://127.0.0.1:" + port + "/hello-world-server:1.1")
         if err != nil {
             // panic(err)
             fmt.Println(err.Error())

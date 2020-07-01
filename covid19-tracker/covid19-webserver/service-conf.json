@@ -1,0 +1,21 @@
+{
+    "NetworkSoftReq": {
+        "RTT": 200
+    },
+    "NetworkHardReq": {
+        "RTT": 1000
+    },
+    "CpuReq": 0,
+    "MemoryReq": 0,
+
+    "DockerConf": {
+        "From": "ubuntu:16.04",
+        "Copy": [
+            ["covid19-webserver", "."],
+            ["favicon.ico", "."]
+        ],
+        "Run": [],
+        "Cmd": "./covid19-webserver $PROXY_PORT $SERVICE_PORT > webserver.log 2>&1",
+        "ProxyClientMode": true
+    }
+}

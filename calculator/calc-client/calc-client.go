@@ -16,8 +16,7 @@ func constructParams(cmd, num1, num2 string) string {
 
 func main() {
     if len(os.Args) != 2 && len(os.Args) != 5 {
-        fmt.Println("Usage:", os.Args[0],
-            "[<proxy-port>]|[<addr> <cmd> <num1> <num2>]")
+        fmt.Println("Usage:", os.Args[0], "[<proxy-port>]|[<addr> <cmd> <num1> <num2>]")
         os.Exit(1)
     }
 
@@ -27,8 +26,7 @@ func main() {
         num1 := os.Args[3]
         num2 := os.Args[4]
 
-        resp, err := http.Get(
-            "http://" + addr + "/" + constructParams(cmd, num1, num2))
+        resp, err := http.Get("http://" + addr + "/" + constructParams(cmd, num1, num2))
         if err != nil {
            panic(err)
         }
@@ -60,7 +58,7 @@ func main() {
 
         // Make request
         resp, err := http.Get("http://127.0.0.1:" + proxyPort +
-            "/calc-server:1.0/" + constructParams(cmd, num1, num2))
+            "/calc-server:1.1/" + constructParams(cmd, num1, num2))
         if err != nil {
             fmt.Println(err.Error())
             continue
