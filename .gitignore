@@ -7,5 +7,7 @@ covid19-tracker/covid19-db/covid19-db
 covid19-tracker/covid19-db/*.csv
 covid19-tracker/covid19-webserver/covid19-webserver
 
+cpu-usage/stress-cpu/stress-cpu
+
 helloworld/helloworldserver/helloworldserver
 helloworld/helloworldclient/helloworldclient
