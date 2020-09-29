@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"os/exec"
 	"strconv"
+	"time"
 )
 
 func main() {
@@ -26,6 +28,9 @@ func main() {
 		log.Fatal(http.ListenAndServe(":" + listenPort, nil))
 	}()
 
+	rand.Seed(time.Now().UnixNano())
+	id := rand.Uint32()
+
 	for {
 		cmd := exec.Command("bash", "-c",
 				`top -bn2 -d 0.5 | fgrep 'Cpu(s)' | tail -1 | awk  -F'id,' '{ n=split($1, vals, ","); v=vals[n]; sub("%", "", v); printf "%f", 100 - v }'`)
@@ -40,8 +45,8 @@ func main() {
 		log.Println("CPU:", cpuUtilization)
 
 		go func() {
-			resp, err := http.Get("http://127.0.0.1:" + proxyPort +
-					"/cpu-usage-aggregator:1.0/" + fmt.Sprintf("%f", cpuUtilization))
+			resp, err := http.Get(fmt.Sprintf(
+					"http://127.0.0.1:%s/cpu-usage-aggregator:1.0/%d/%f", proxyPort, id, cpuUtilization))
 			if err != nil {
 				log.Fatal(err)
 			}
