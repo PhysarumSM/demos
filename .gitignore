@@ -8,6 +8,8 @@ covid19-tracker/covid19-db/*.csv
 covid19-tracker/covid19-webserver/covid19-webserver
 
 cpu-usage/aggregator/aggregator
+cpu-usage/predictor/__pycache__
+cpu-usage/predictor/venv
 cpu-usage/sensor/sensor
 cpu-usage/stress-cpu/stress-cpu
 

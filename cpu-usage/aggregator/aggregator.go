@@ -79,7 +79,7 @@ func main() {
 				log.Fatal(err)
 			}
 			datasetReader := bytes.NewReader(datasetBytes)
-			resp, err := http.Post("http://127.0.0.1:" + proxyPort + "/cpu-usage-predictor:1.0/",
+			resp, err := http.Post("http://127.0.0.1:" + proxyPort + "/cpu-usage-predictor:1.0/upload",
 					"application/json", datasetReader)
 			if err != nil {
 				log.Fatal(err)
