@@ -13,41 +13,62 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"os"
+	"strconv"
 	"time"
 )
 
 func main() {
-	rand.Seed(time.Now().UnixNano())
-
 	// Max fib number
 	// Keeps it to a 32 bit int
 	max := 40
 
+	fmt.Println("Usage: %s [<max fib number>]")
+	fmt.Println("Optionally provide the max fib number to calculate, between [1, 40]")
+	fmt.Println("This will determine how stressful this will be for the CPU")
+	if len(os.Args) > 1 {
+		maxI64, err := strconv.ParseInt(os.Args[1], 10, 32)
+		if err != nil {
+			panic(err)
+		}
+		max = int(maxI64)
+		if max < 1 || max > 40 {
+			panic("Error: choose number between [1, 40]")
+		}
+	} else {
+		fmt.Println("Using default max fib value of 40")
+	}
+
+	rand.Seed(time.Now().UnixNano())
     for {
-		times := rand.Intn(3000) + 500
-		fmt.Println("Trying", times, "times increasing fib")
+		timesInc := rand.Intn(3000) + 500
+		fmt.Println("Trying", timesInc, "times increasing fib")
 		for num := 0; num <= max; num++ {
-			CPU(times, num)
-			time.Sleep(time.Millisecond);
+			CPU(timesInc, num)
+			time.Sleep(time.Millisecond)
 		}
-		fmt.Println("Trying", times, "times decreasing fib")
+		timesDec := rand.Intn(3000) + 500
+		fmt.Println("Trying", timesDec, "times decreasing fib")
 		for num := max; num >= 0; num-- {
-			CPU(times, num)
+			CPU(timesDec, num)
+			time.Sleep(time.Millisecond)
 		}
-		fmt.Println("Done")
-		time.Sleep(time.Second)
+		pauseMs := rand.Intn(2000)
+		fmt.Println("Pause for", pauseMs, "ms")
+		time.Sleep(time.Millisecond * time.Duration(pauseMs))
     }
 }
 
 // CPU does stuff
 func CPU(times, num int) []int {
+	pauseNs := rand.Intn(1500) + 1500
 	var r []int
 	for i := 0; i < times; i++ {
 		d := bubble(expand(reversePrime(fib(num))))
 		if len(d) > 0 {
 			r = append(r, d[len(d)-1])
 		}
-		time.Sleep(time.Nanosecond * 2500)
+		time.Sleep(time.Nanosecond * time.Duration(pauseNs))
 	}
 	return r
 }
