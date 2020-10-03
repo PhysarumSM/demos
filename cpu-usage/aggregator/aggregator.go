@@ -69,7 +69,7 @@ func main() {
 		log.Fatal(err)
 	}
 	initResp.Body.Close()
-	log.Println("Initial request for predictor response:", body)
+	log.Println("Initial request for predictor response:", string(body))
 
 	// Do every 15 seconds
     pushInterval := 15

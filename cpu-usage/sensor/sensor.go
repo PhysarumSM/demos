@@ -38,7 +38,7 @@ func main() {
 		log.Fatal(err)
 	}
 	initResp.Body.Close()
-	log.Println("Initial request for aggregator response:", body)
+	log.Println("Initial request for aggregator response:", string(body))
 	log.Println("Wait 10 seconds before start sending CPU data")
 	time.Sleep(time.Second * 10)
 
