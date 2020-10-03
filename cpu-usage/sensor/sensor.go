@@ -29,16 +29,28 @@ func main() {
 		log.Fatal(http.ListenAndServe(":" + listenPort, nil))
 	}()
 
-	initResp, err := http.Get(fmt.Sprintf("http://127.0.0.1:%s/cpu-usage-aggregator:1.0", proxyPort))
-	if err != nil {
-		log.Fatal(err)
+	success := false
+	for i := 0; i < 10; i++ {
+		time.Sleep(time.Second)
+		log.Println("Initial prefetch request")
+		initResp, err := http.Get(fmt.Sprintf("http://127.0.0.1:%s/cpu-usage-aggregator:1.0", proxyPort))
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		body, err := ioutil.ReadAll(initResp.Body)
+		initResp.Body.Close()
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		log.Println("Initial request for aggregator response:", string(body))
+		success = true
+		break
 	}
-	body, err := ioutil.ReadAll(initResp.Body)
-	if err != nil {
-		log.Fatal(err)
+	if !success {
+		log.Fatalln("Could not make inital prefetch request")
 	}
-	initResp.Body.Close()
-	log.Println("Initial request for aggregator response:", string(body))
 	log.Println("Wait 10 seconds before start sending CPU data")
 	time.Sleep(time.Second * 10)
 
