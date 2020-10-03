@@ -1,4 +1,5 @@
 import csv
+import logging
 import numpy
 import torch
 import torch.nn as nn
@@ -63,7 +64,7 @@ def train(model, train_data, epochs=20, lr=0.01):
             epoch_losses.append(loss.item())
         avg_loss = numpy.mean(epoch_losses)
         losses.append(avg_loss)
-    print('Final loss:', losses[-1], ', Min loss:', numpy.min(losses))
+    logging.info('Final loss: {}, Min loss: {}'.format(losses[-1], numpy.min(losses)))
     return losses
 
 def average_predictor(train_data):
@@ -74,7 +75,7 @@ def average_predictor(train_data):
         loss = criterion(outputs, targets)
         losses.append(loss.item())
     avg_loss = numpy.mean(losses)
-    print('Final loss:', avg_loss)
+    logging.info('Final loss: {}'.format(avg_loss))
     return losses
 
 def data_list_to_tensors(data_list, num_inputs=4):
@@ -102,12 +103,12 @@ def train_variations(data_list):
     ]
 
     for dataset in datasets:
-        print('Try average predictor on data of size', dataset[0].size())
+        logging.info('Try average predictor on data of size {}'.format(dataset[0].size()))
         average_predictor(dataset)
         for ModelClass in model_classes:
             num_inputs = dataset[0].size()[1]
             model = ModelClass(num_inputs=num_inputs)
-            print('Training {} on data of size {}'.format(model.name, dataset[0].size()))
+            logging.info('Training {} on data of size {}'.format(model.name, dataset[0].size()))
             train(model, dataset)
 
 def read_csv_data(filename):

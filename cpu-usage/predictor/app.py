@@ -1,4 +1,5 @@
 import flask
+import logging
 import multiprocessing
 import multiprocessing.managers
 import socket
@@ -7,6 +8,13 @@ import threading
 import time
 
 import model
+
+file_handler = logging.FileHandler(filename='predictor.log')
+stdout_handler = logging.StreamHandler(sys.stdout)
+logging.basicConfig(
+    level=logging.DEBUG,
+    handlers=[file_handler, stdout_handler]
+)
 
 app = flask.Flask(__name__)
 
@@ -26,14 +34,14 @@ def get_data():
 
 @app.route('/', methods=['GET'])
 def root():
-    print('Get request from:', flask.request.remote_addr)
+    logging.info('Get request from: {}'.format(flask.request.remote_addr))
     return 'OK'
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    print('Upload post request from:', flask.request.remote_addr)
+    logging.info('Upload post request from: {}'.format(flask.request.remote_addr))
     posted_data = flask.request.json
-    print(posted_data)
+    logging.info('Posted data: {}'.format(posted_data))
     manager = multiprocessing.managers.BaseManager(('127.0.0.1', manager_port), b'password')
     manager.register('put_data')
     manager.connect()
@@ -42,7 +50,7 @@ def upload():
 
 @app.route('/data', methods=['GET'])
 def get():
-    print('Get data request from:', flask.request.remote_addr)
+    logging.info('Get data request from: {}'.format(flask.request.remote_addr))
     manager = multiprocessing.managers.BaseManager(('127.0.0.1', manager_port), b'password')
     manager.register('get_data')
     manager.connect()
@@ -84,13 +92,15 @@ if __name__ == '__main__':
     manager.register('put_data', put_data)
     manager.register('get_data', get_data)
     manager.start()
-    print('Run multiprocessing manager on 127.0.0.1:{}'.format(manager_port))
+    logging.info('Run multiprocessing manager on 127.0.0.1:{}'.format(manager_port))
 
     threading.Thread(target=app.run, kwargs={'host': '0.0.0.0', 'port': server_port},
             daemon=True).start()
 
     while True:
+        logging.info('Run training')
         run_training()
         time.sleep(1)
 
+    logging.error('Uh oh, should not get here')
     manager.end()

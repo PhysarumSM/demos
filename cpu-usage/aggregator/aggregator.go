@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -24,6 +25,14 @@ func main() {
 
 	data := make(map[uint64][]float64)
 	var mux sync.Mutex
+
+	logFile, err := os.Create("aggregator.log")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer logFile.Close()
+	mw := io.MultiWriter(os.Stdout, logFile)
+	log.SetOutput(mw)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		log.Println("Request from:", r.RemoteAddr)
@@ -57,7 +66,7 @@ func main() {
 	})
 
 	go func(){
-		log.Fatal(http.ListenAndServe(":" + listenPort, nil))
+		log.Fatalln(http.ListenAndServe(":" + listenPort, nil))
 	}()
 
 	success := false
@@ -106,13 +115,13 @@ func main() {
 			log.Println("Sending data")
 			datasetBytes, err := json.Marshal(dataset)
 			if err != nil {
-				log.Fatal(err)
+				log.Fatalln(err)
 			}
 			datasetReader := bytes.NewReader(datasetBytes)
 			resp, err := http.Post("http://127.0.0.1:" + proxyPort + "/cpu-usage-predictor:1.0/upload",
 					"application/json", datasetReader)
 			if err != nil {
-				log.Fatal(err)
+				log.Fatalln(err)
 			}
 			resp.Body.Close()
 		}

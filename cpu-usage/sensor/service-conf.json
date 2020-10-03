@@ -14,6 +14,6 @@
             ["sensor", "."]
         ],
         "Run": [],
-        "Cmd": "./sensor $PROXY_PORT $SERVICE_PORT > sensor.log 2>&1"
+        "Cmd": "./sensor $PROXY_PORT $SERVICE_PORT"
     }
 }

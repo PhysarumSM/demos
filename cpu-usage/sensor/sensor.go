@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -14,11 +15,19 @@ import (
 
 func main() {
 	if len(os.Args) != 3 {
-        fmt.Println("Usage:", os.Args[0], "<proxy-port> <listen-port>")
-        os.Exit(1)
-    }
-    proxyPort := os.Args[1]
-    listenPort := os.Args[2]
+		fmt.Println("Usage:", os.Args[0], "<proxy-port> <listen-port>")
+		os.Exit(1)
+	}
+	proxyPort := os.Args[1]
+	listenPort := os.Args[2]
+
+	logFile, err := os.Create("sensor.log")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer logFile.Close()
+	mw := io.MultiWriter(os.Stdout, logFile)
+	log.SetOutput(mw)
 
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		log.Println("Request from:", r.RemoteAddr)
@@ -26,7 +35,7 @@ func main() {
 	})
 
 	go func(){
-		log.Fatal(http.ListenAndServe(":" + listenPort, nil))
+		log.Fatalln(http.ListenAndServe(":" + listenPort, nil))
 	}()
 
 	success := false
@@ -61,11 +70,11 @@ func main() {
 				`top -bn2 -d 0.5 | fgrep 'Cpu(s)' | tail -1 | awk  -F'id,' '{ n=split($1, vals, ","); v=vals[n]; sub("%", "", v); printf "%f", 100 - v }'`)
 		output, err := cmd.Output()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalln(err)
 		}
 		cpuUtilization, err := strconv.ParseFloat(string(output), 32)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalln(err)
 		}
 		log.Println("CPU:", cpuUtilization)
 
@@ -73,7 +82,7 @@ func main() {
 			resp, err := http.Get(fmt.Sprintf(
 					"http://127.0.0.1:%s/cpu-usage-aggregator:1.0/upload/%d/%f", proxyPort, id, cpuUtilization))
 			if err != nil {
-				log.Fatal(err)
+				log.Fatalln(err)
 			}
 			resp.Body.Close()
 		}()

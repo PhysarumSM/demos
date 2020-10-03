@@ -8,9 +8,12 @@ covid19-tracker/covid19-db/*.csv
 covid19-tracker/covid19-webserver/covid19-webserver
 
 cpu-usage/aggregator/aggregator
+cpu-usage/aggregator/aggregator.log
 cpu-usage/predictor/__pycache__
+cpu-usage/predictor/predictor.log
 cpu-usage/predictor/venv
 cpu-usage/sensor/sensor
+cpu-usage/sensor/sensor.log
 cpu-usage/stress-cpu/stress-cpu
 
 helloworld/helloworldserver/helloworldserver

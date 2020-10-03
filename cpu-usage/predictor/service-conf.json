@@ -19,6 +19,6 @@
         "Run": [
             "pip --no-cache-dir install --compile -r requirements.txt"
         ],
-        "Cmd": "python app.py $PROXY_PORT $SERVICE_PORT > app.log 2>&1"
+        "Cmd": "python app.py $PROXY_PORT $SERVICE_PORT"
     }
 }
