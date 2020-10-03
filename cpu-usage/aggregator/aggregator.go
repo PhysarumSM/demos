@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -25,6 +26,10 @@ func main() {
 	var mux sync.Mutex
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("Request from:", r.RemoteAddr)
+		fmt.Fprintf(w, "OK")
+	})
+	http.HandleFunc("/upload", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Request from:", r.RemoteAddr, ", for:", r.URL.Path)
 		parts := strings.Split(r.URL.Path, "/")
 		if len(parts) < 2 {
@@ -55,8 +60,19 @@ func main() {
 		log.Fatal(http.ListenAndServe(":" + listenPort, nil))
 	}()
 
-	// Do every 10 seconds
-    pushInterval := 10
+	initResp, err := http.Get(fmt.Sprintf("http://127.0.0.1:%s/cpu-usage-predictor:1.0", proxyPort))
+	if err != nil {
+		log.Fatal(err)
+	}
+	body, err := ioutil.ReadAll(initResp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	initResp.Body.Close()
+	log.Println("Initial request for predictor response:", body)
+
+	// Do every 15 seconds
+    pushInterval := 15
     timerCh := time.Tick(time.Duration(pushInterval) * time.Second)
     for range timerCh {
 		dataset := make([][]float64, 0)

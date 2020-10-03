@@ -1,9 +1,9 @@
 {
     "NetworkSoftReq": {
-        "RTT": 200
+        "RTT": 200000000
     },
     "NetworkHardReq": {
-        "RTT": 1000
+        "RTT": 1000000000
     },
     "CpuReq": 0,
     "MemoryReq": 0,

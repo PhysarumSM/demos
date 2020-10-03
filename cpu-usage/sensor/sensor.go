@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"math/rand"
 	"net/http"
@@ -20,7 +21,7 @@ func main() {
     listenPort := os.Args[2]
 
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Request from:", r.RemoteAddr)
+		log.Println("Request from:", r.RemoteAddr)
 		fmt.Fprintf(w, "OK")
 	})
 
@@ -28,9 +29,21 @@ func main() {
 		log.Fatal(http.ListenAndServe(":" + listenPort, nil))
 	}()
 
+	initResp, err := http.Get(fmt.Sprintf("http://127.0.0.1:%s/cpu-usage-aggregator:1.0", proxyPort))
+	if err != nil {
+		log.Fatal(err)
+	}
+	body, err := ioutil.ReadAll(initResp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	initResp.Body.Close()
+	log.Println("Initial request for aggregator response:", body)
+	log.Println("Wait 10 seconds before start sending CPU data")
+	time.Sleep(time.Second * 10)
+
 	rand.Seed(time.Now().UnixNano())
 	id := rand.Uint32()
-
 	for {
 		cmd := exec.Command("bash", "-c",
 				`top -bn2 -d 0.5 | fgrep 'Cpu(s)' | tail -1 | awk  -F'id,' '{ n=split($1, vals, ","); v=vals[n]; sub("%", "", v); printf "%f", 100 - v }'`)
@@ -46,7 +59,7 @@ func main() {
 
 		go func() {
 			resp, err := http.Get(fmt.Sprintf(
-					"http://127.0.0.1:%s/cpu-usage-aggregator:1.0/%d/%f", proxyPort, id, cpuUtilization))
+					"http://127.0.0.1:%s/cpu-usage-aggregator:1.0/upload/%d/%f", proxyPort, id, cpuUtilization))
 			if err != nil {
 				log.Fatal(err)
 			}

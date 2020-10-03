@@ -1,9 +1,9 @@
 {
     "NetworkSoftReq": {
-        "RTT": 200
+        "RTT": 200000000
     },
     "NetworkHardReq": {
-        "RTT": 1000
+        "RTT": 1000000000
     },
     "CpuReq": 0,
     "MemoryReq": 0,
@@ -14,6 +14,6 @@
             ["sensor", "."]
         ],
         "Run": [],
-        "Cmd": "./server $PROXY_PORT $SERVICE_PORT > sensor.log 2>&1"
+        "Cmd": "./sensor $PROXY_PORT $SERVICE_PORT > sensor.log 2>&1"
     }
 }

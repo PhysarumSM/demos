@@ -24,6 +24,11 @@ def get_data():
     with lock:
         return data
 
+@app.route('/', methods=['GET'])
+def root():
+    print('Get request from:', flask.request.remote_addr)
+    return 'OK'
+
 @app.route('/upload', methods=['POST'])
 def upload():
     print('Upload post request from:', flask.request.remote_addr)
