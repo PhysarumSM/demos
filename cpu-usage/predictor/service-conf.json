@@ -1,0 +1,24 @@
+{
+    "NetworkSoftReq": {
+        "RTT": 200
+    },
+    "NetworkHardReq": {
+        "RTT": 1000
+    },
+    "CpuReq": 0,
+    "MemoryReq": 0,
+
+    "DockerConf": {
+        "From": "python:3",
+        "Copy": [
+            ["requirements.txt", "."],
+            ["sample_cpu_data.csv", "."],
+            ["model.py", "."],
+            ["app.py", "."]
+        ],
+        "Run": [
+            "pip --no-cache-dir install --compile -r requirements.txt"
+        ],
+        "Cmd": "python app.py $PROXY_PORT $SERVICE_PORT > app.log 2>&1"
+    }
+}

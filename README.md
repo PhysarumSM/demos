@@ -133,3 +133,24 @@ Now run a Docker container. Make sure you set the container's P2P_BOOTSTRAPS env
 ```
 
 You can now visit the website hosted on you machine at port 8080 from your web browser.
+
+## CPU Usage Predictor
+
+Sensor. Pushes CPU readings to aggregator.
+```
+$ cd demos/cpu-usage/sensor
+$ registry-cli add service-conf.json <DockerHub repo> cpu-usage-sensor:1.0
+```
+Aggregator. Formats CPU data and pushes to predictor.
+```
+$ cd demos/cpu-usage/aggregator
+$ registry-cli add service-conf.json <DockerHub repo> cpu-usage-aggregator:1.0
+```
+
+Predictor. Trains a couple ML models on data. Responds to 2 endpoints, POST request a json array of 5 float arrays (eg. [[1,2,3,4,5],[6,7,8,9,10]]) to /upload, and GET request to /data to return all collected data.
+```
+$ cd demos/cpu-usage/predictor
+$ registry-cli add service-conf.json <DockerHub repo> cpu-usage-predictor:1.0
+```
+
+You'll probably want to set up by triggering a bunch of sensors to be allocated. Create you own proxy and send a bunch of requests for cpu-usage-sensor:1.0 which should allocate them somewhere. Or boot them manually. From there data should get pushed to aggregator which pushes to predictor, which automatically allocates them.

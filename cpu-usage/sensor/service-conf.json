@@ -1,0 +1,19 @@
+{
+    "NetworkSoftReq": {
+        "RTT": 200
+    },
+    "NetworkHardReq": {
+        "RTT": 1000
+    },
+    "CpuReq": 0,
+    "MemoryReq": 0,
+
+    "DockerConf": {
+        "From": "ubuntu:16.04",
+        "Copy": [
+            ["sensor", "."]
+        ],
+        "Run": [],
+        "Cmd": "./server $PROXY_PORT $SERVICE_PORT > sensor.log 2>&1"
+    }
+}
