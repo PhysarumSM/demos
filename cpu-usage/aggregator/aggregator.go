@@ -29,7 +29,7 @@ func main() {
 		log.Println("Request from:", r.RemoteAddr)
 		fmt.Fprintf(w, "OK")
 	})
-	http.HandleFunc("/upload", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/upload/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Request from:", r.RemoteAddr, ", for:", r.URL.Path)
 		parts := strings.Split(r.URL.Path, "/")
 		if len(parts) < 2 {
@@ -89,6 +89,7 @@ func main() {
     for range timerCh {
 		dataset := make([][]float64, 0)
 		mux.Lock()
+		log.Println("Data:", data)
 		for id, dataPoints := range data {
 			for len(dataPoints) >= 5 {
 				row := make([]float64, 5)
@@ -100,6 +101,7 @@ func main() {
 			copy(data[id], dataPoints)
 		}
 		mux.Unlock()
+		log.Println("Formatted dataset:", dataset)
 		if len(dataset) > 0 {
 			log.Println("Sending data")
 			datasetBytes, err := json.Marshal(dataset)
