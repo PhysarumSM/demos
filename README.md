@@ -206,6 +206,8 @@ $ go build
 $ registry-cli add service-conf.json <DockerHub repo> cpu-usage-predictor:1.0
 ```
 
+If you find he registry-cli fails, probably because of how large the image is. Try cleaning up your drive, and skip hashing by providing a hardcoded hash `--content-id <hash>`. eg. `$ registry-cli add --content-id CpuUsagePredictor service-conf.json <DockerHub repo> cpu-usage-predictor:1.0`.
+
 Alternatively, to run manually, run proxy:
 ```
 $ ./proxy <proxy port> cpu-usage-predictor:1.0 <service port> <metrics port>
