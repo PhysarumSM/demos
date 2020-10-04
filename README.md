@@ -197,7 +197,7 @@ $ ./aggregator <proxy port> <service port>
 
 
 ## Predictor
-Trains a couple ML models on data received from aggregator, plus a set of initially provided sample data. Responds to 2 endpoints. POST request a json array of arrays where the inner arrays should contain 5 numbers (eg. [[1,2,3,4,5],[6,7,8,9,10]]) to /upload. GET request to /data to return all collected data. Repeatedly performs a set of training runs on 2 linear regression models and a polynomial regression model. As new data comes in, future training runs will use the new data.
+Trains a couple ML models on data received from aggregator, plus a set of initially provided sample data. Responds to 3 endpoints. POST request a json array of arrays where the inner arrays should contain 5 numbers (eg. [[1,2,3,4,5],[6,7,8,9,10]]) to /upload. GET request to /data to return all collected data. GET request to /logs to return log messages from the app. Repeatedly performs a set of training runs on 2 linear regression models and a polynomial regression model. As new data comes in, future training runs will use the new data.
 
 To build and add to registry-service:
 ```

@@ -9,7 +9,8 @@ import time
 
 import model
 
-file_handler = logging.FileHandler(filename='predictor.log')
+log_filename = 'predictor.log'
+file_handler = logging.FileHandler(filename=log_filename)
 stdout_handler = logging.StreamHandler(sys.stdout)
 logging.basicConfig(
     level=logging.DEBUG,
@@ -56,6 +57,14 @@ def get():
     manager.connect()
     current_data = manager.get_data()._getvalue()
     return flask.json.jsonify(current_data)
+
+@app.route('/logs', methods=['GET'])
+def logs():
+    logging.info('Get logs request from: {}'.format(flask.request.remote_addr))
+    logtext = ''
+    with open(log_filename, 'r') as f:
+        logtext = f.read()
+    return logtext
 
 # Train model
 # For now, use dummy model that takes average of inputs
